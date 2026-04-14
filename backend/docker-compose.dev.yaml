@@ -1,0 +1,20 @@
+name: rosastattoo-di
+
+services:
+  mariadb:
+    image: mariadb:11.3.2
+    container_name: rosas-tattoo-di
+    ports:
+      - "3312:3306"
+    env_file:
+      - .env
+    environment:
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - mariadb_data_di:/var/lib/mysql
+
+volumes:
+  mariadb_data_di:

@@ -1,0 +1,47 @@
+############################
+# BACKEND (Spring Boot)
+############################
+
+# Compilación / ejecución
+backend/target/
+backend/logs/
+backend/out/
+backend/build/
+
+# Variables de entorno
+backend/.env
+backend/.env.*
+
+# IntelliJ / IDE
+backend/.idea/
+backend/*.iml
+backend/.classpath
+backend/.project
+backend/.settings/
+
+############################
+# FRONTEND (React / Vite)
+############################
+
+# Dependencias / build
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+frontend/.cache/
+
+# Variables de entorno
+frontend/.env
+frontend/.env.*
+
+# IDE
+frontend/.idea/
+frontend/*.iml
+
+############################
+# GENERAL
+############################
+
+*.log
+.DS_Store
+Thumbs.db
