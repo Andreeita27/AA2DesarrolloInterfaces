@@ -1,70 +1,80 @@
 import { useState, type FormEvent } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-// Página de inicio de sesión
-export default function LoginPage() {
-    const { login } = useAuth();
+// Página de registro de usuarios
+export default function RegisterPage() {
+    const { register } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
 
-    // Estado local del formulario
-    // Es local porque solo se usa en este componente
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    // Estado local del formulario de registro
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+    });
 
-    // Estado local para error y envio del formulario
+    // Estados locales auxiliares
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Si el formulario fue redirigido aqui desde ruta protegida, guarda esa ruta para volver despues del login
-    const from = (location.state as { from?: { pathname?: string } })?.from?.pathname;
+    // Función reutilizable para actualizar cualquier campo del formulario
+    const handleChange = (field: 'name' | 'email' | 'password', value: string) => {
+        setFormData((previous) => ({
+            ...previous,
+            [field]: value,
+        }));
+    };
 
-    // Funcion que se ejecuta al enviar el formulario
+    // Envío del formulario
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event?.preventDefault();
+        event.preventDefault();
         setErrorMessage('');
         setIsSubmitting(true);
 
         try {
-            // LLamamos al login del contexto
-            const loggedUser = await login({ email, password });
+            // Registramos al usuario
+            const newUser = await register(formData);
 
-            // Si venia de ruta protegida, vuelve ahi
-            if (from) {
-                navigate(from, { replace: true });
-                return;
-            }
-
-            // Si no redirige segun rol
-            if (loggedUser.role === 'ADMIN') {
+            // Redirigimos según el rol devuelto
+            if (newUser.role === 'ADMIN') {
                 navigate('/admin/dashboard', { replace: true });
             } else {
                 navigate('/client/dashboard', { replace: true });
             }
         } catch (error) {
-            // Si el backend devuelve error, lo muestra
             setErrorMessage(
-                error instanceof Error ? error.message : 'No se pudo iniciar sesión'
+                error instanceof Error ? error.message : 'No se pudo completar el registro'
             );
         } finally {
-            // Pase lo que pase, termina el estado de envio
             setIsSubmitting(false);
         }
     };
 
     return (
         <section style={{ maxWidth: '420px' }}>
-            <h2>Iniciar sesión</h2>
+            <h2>Registro</h2>
 
             <form onSubmit={handleSubmit}>
+                <div style={{ marginBottom: '1rem' }}>
+                    <label htmlFor="name">Nombre</label>
+                    <input
+                        id="name"
+                        type="text"
+                        value={formData.name}
+                        onChange={(event) => handleChange('name', event.target.value)}
+                        required
+                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
+                    />
+                </div>
+
                 <div style={{ marginBottom: '1rem' }}>
                     <label htmlFor="email">Email</label>
                     <input
                         id="email"
                         type="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
+                        value={formData.email}
+                        onChange={(event) => handleChange('email', event.target.value)}
                         required
                         style={{ display: 'block', width: '100%', padding: '0.5rem' }}
                     />
@@ -75,14 +85,14 @@ export default function LoginPage() {
                     <input
                         id="password"
                         type="password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
+                        value={formData.password}
+                        onChange={(event) => handleChange('password', event.target.value)}
                         required
                         style={{ display: 'block', width: '100%', padding: '0.5rem' }}
                     />
                 </div>
 
-                {/* Mostramos el mensaje de error si existe */}
+                {/* Mensaje de error si algo falla */}
                 {errorMessage && (
                     <p style={{ color: 'crimson', marginBottom: '1rem' }}>
                         {errorMessage}
@@ -90,7 +100,7 @@ export default function LoginPage() {
                 )}
 
                 <button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? 'Entrando...' : 'Entrar'}
+                    {isSubmitting ? 'Registrando...' : 'Crear cuenta'}
                 </button>
             </form>
         </section>
