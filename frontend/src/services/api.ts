@@ -16,7 +16,7 @@ export async function apiFetch<T>( // La T indica el tipo de dato que esperamos 
     endpoint: string,
     options: ApiFetchOptions = {}
 ): Promise<T> {
-    const { method = 'GET'. body, token } = options;
+    const { method = 'GET', body, token } = options;
 
     // Cabeceras comunes para todas las peticiones JSON
     const headers: HeadersInit = {

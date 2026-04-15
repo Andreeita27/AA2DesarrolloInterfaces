@@ -81,6 +81,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return response.user;
     };
 
+    const logout = () => {
+        setToken(null);
+        setUser(null);
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(USER_KEY);
+    }
+
     // Utilidad para comproobar si el susuario tiene un rol concreto
     const hasRole = (role: UserRole) => user?.role === role;
 
