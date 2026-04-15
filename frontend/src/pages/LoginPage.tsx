@@ -9,7 +9,7 @@ export default function LoginPage() {
     const location = useLocation();
 
     // Estado local del formulario
-    // Es local porque solo se usa en este componente
+    // Es local porque solo se usa en este componente, no hace falta contexto
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 

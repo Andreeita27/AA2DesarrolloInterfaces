@@ -46,8 +46,8 @@ export default function AppLayout() {
           {isAuthenticated ? (
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <span>
-                {/* Muestra nombre y rol del usuario autenticado */}
-                {user?.name} ({user?.role})
+                {/* Muestra email y rol del usuario autenticado */}
+                {user?.email} ({user?.role})
               </span>
 
               {/* Botón para cerrar sesión */}

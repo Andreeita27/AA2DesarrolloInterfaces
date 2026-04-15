@@ -1,7 +1,7 @@
 // Importo utilidad genérica para hacer peticiones
 import { apiFetch } from './api';
 // Importo los tipos relacionados con autenticación
-import type { AuthResponse, LoginRequest, RegisterRequest, AuthUser, } from '../types/auth';
+import type { AuthResponse, LoginRequest, RegisterRequest, } from '../types/auth';
 
 //Servicio de autenticación
 // Aqui se centralizan las llamadas relacionadas con auth
@@ -19,12 +19,5 @@ export const authService = {
         apiFetch<AuthResponse>('/auth/register', {
             method: 'POST',
             body: data,
-        }),
-
-    // Obtener perfil del usuario autenticado, se necesita token
-    getProfile: (token: string) =>
-        apiFetch<AuthUser>('/auth/me', {
-            method: 'GET',
-            token,
         }),
 };

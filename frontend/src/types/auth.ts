@@ -3,10 +3,9 @@ export type UserRole = 'ADMIN' | 'CLIENT'; // Roles posibles que puede devolver 
 // Esto representa al usuario autenticado
 // Esta info se guarda en contexto y en localstorage
 export interface AuthUser {
-    id: number;
-    name: string;
     email: string;
     role: UserRole;
+    clientId: number | null;
 }
 
 //Estos son los datos que se envian al backend para inciar sesión
@@ -17,13 +16,18 @@ export interface LoginRequest {
 
 //Datos que se envían al backend para registrar un nuevo usuario
 export interface RegisterRequest {
-    name: string;
+    clientName: string;
+    clientSurname: string;
     email: string;
+    phone: string;
+    birthDate: string;
+    showPhoto: boolean;
     password: string;
 }
 
-//Respuesta esperada del backend tras login o registro
+//Respuesta real del backend tras login o registro
 export interface AuthResponse {
     token: string;
-    user: AuthUser;
+    role: UserRole;
+    clientId: number | null;
 }

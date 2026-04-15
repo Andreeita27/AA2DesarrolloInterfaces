@@ -9,8 +9,12 @@ export default function RegisterPage() {
 
     // Estado local del formulario de registro
     const [formData, setFormData] = useState({
-        name: '',
+        clientName: '',
+        clientSurname: '',
         email: '',
+        phone: '',
+        birthDate: '',
+        showPhoto: false,
         password: '',
     });
 
@@ -19,7 +23,7 @@ export default function RegisterPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Función reutilizable para actualizar cualquier campo del formulario
-    const handleChange = (field: 'name' | 'email' | 'password', value: string) => {
+    const handleChange = (field: 'clientName' | 'clientSurname' | 'email' | 'phone' | 'birthDate' | 'password', value: string) => {
         setFormData((previous) => ({
             ...previous,
             [field]: value,
@@ -52,17 +56,31 @@ export default function RegisterPage() {
     };
 
     return (
-        <section style={{ maxWidth: '420px' }}>
+        <section style={{ maxWidth: '520px' }}>
             <h2>Registro</h2>
 
             <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="name">Nombre</label>
+                    <label htmlFor="clientName">Nombre</label>
                     <input
-                        id="name"
+                        id="clientName"
                         type="text"
-                        value={formData.name}
-                        onChange={(event) => handleChange('name', event.target.value)}
+                        value={formData.clientName}
+                        onChange={(event) => handleChange('clientName', event.target.value)}
+                        required
+                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1rem' }}>
+                    <label htmlFor="clientSurname">Apellidos</label>
+                    <input
+                        id="clientSurname"
+                        type="text"
+                        value={formData.clientSurname}
+                        onChange={(event) =>
+                            handleChange('clientSurname', event.target.value)
+                        }
                         required
                         style={{ display: 'block', width: '100%', padding: '0.5rem' }}
                     />
@@ -78,6 +96,45 @@ export default function RegisterPage() {
                         required
                         style={{ display: 'block', width: '100%', padding: '0.5rem' }}
                     />
+                </div>
+
+                <div style={{ marginBottom: '1rem' }}>
+                    <label htmlFor="phone">Teléfono</label>
+                    <input
+                        id="phone"
+                        type="text"
+                        value={formData.phone}
+                        onChange={(event) => handleChange('phone', event.target.value)}
+                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1rem' }}>
+                    <label htmlFor="birthDate">Fecha de nacimiento</label>
+                    <input
+                        id="birthDate"
+                        type="date"
+                        value={formData.birthDate}
+                        onChange={(event) => handleChange('birthDate', event.target.value)}
+                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1rem' }}>
+                    {/* Checkbox sencillo para showPhoto */}
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={formData.showPhoto}
+                            onChange={(event) =>
+                                setFormData((previous) => ({
+                                    ...previous,
+                                    showPhoto: event.target.checked,
+                                }))
+                            }
+                        />{' '}
+                        Mostrar tus tatuajes en la web
+                    </label>
                 </div>
 
                 <div style={{ marginBottom: '1rem' }}>
