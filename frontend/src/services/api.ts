@@ -28,8 +28,10 @@ export async function apiFetch<T>( // La T indica el tipo de dato que esperamos 
         headers.Authorization = `Bearer ${token}`;
     }
 
+    const url = `${API_URL}${endpoint}`;
+
     // Se hace la peticion al endpoint indicado
-    const response = await fetch(`${API_URL}${endpoint}`, {
+    const response = await fetch(url, {
         method,
         headers,
         //Si hay body se convierte a JSON
@@ -51,14 +53,14 @@ export async function apiFetch<T>( // La T indica el tipo de dato que esperamos 
     // Si la respuesta HTTP no fue correcta
     if (!response.ok) {
         // Se intenta sacar un mensaje de error del backed
-        const message = 
+        const message =
             typeof data === 'object' &&
-            data !== null &&
-            'message' in data &&
-            typeof (data as { message?: unknown }).message === 'string'
+                data !== null &&
+                'message' in data &&
+                typeof (data as { message?: unknown }).message === 'string'
                 ? (data as { message: string }).message
                 : 'Ha ocurrido un error en la petición';
-        
+
         // Se lanza un error para que el componente o servicio lo gestione
         throw new Error(message);
     }

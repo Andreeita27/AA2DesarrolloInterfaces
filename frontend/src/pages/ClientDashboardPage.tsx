@@ -7,7 +7,7 @@ export default function ClientDashboardPage() {
     return (
         <section>
             <h1>Dashboard cliente</h1>
-            <p>Bienvenida, {user?.name}</p>
+            <p>Bienvenida, {user?.email}</p>
             <p>Más adelante aquí pongo tarjetas resumen y tabla de citas.</p>
         </section>
     );
