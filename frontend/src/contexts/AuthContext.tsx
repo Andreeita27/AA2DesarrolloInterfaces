@@ -59,26 +59,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const login = async (credentials: LoginRequest): Promise<AuthUser> => {
         const response = await authService.login(credentials);
 
+        // Transformala respuesta del backend al formato que usa el contexto
+        const authUser: AuthUser = {
+            email: credentials.email,
+            role: response.role,
+            clientId: response.clientId,
+        };
+
         setToken(response.token);
-        setUser(response.user);
+        setUser(authUser);
 
         localStorage.setItem(TOKEN_KEY, response.token);
-        localStorage.setItem(USER_KEY, JSON.stringify(response.user));
+        localStorage.setItem(USER_KEY, JSON.stringify(authUser));
 
-        return response.user;
+        return authUser;
     };
 
     // Funcion para registrar un usuario, también deja la sesion iniciada automaticamente
     const register = async (data: RegisterRequest): Promise<AuthUser> => {
         const response = await authService.register(data);
 
+        const authUser: AuthUser = {
+            email: data.email,
+            role: response.role,
+            clientId: response.clientId,
+        };
+
         setToken(response.token);
-        setUser(response.user);
+        setUser(authUser);
 
         localStorage.setItem(TOKEN_KEY, response.token);
-        localStorage.setItem(USER_KEY, JSON.stringify(response.user));
+        localStorage.setItem(USER_KEY, JSON.stringify(authUser));
 
-        return response.user;
+        return authUser;
     };
 
     const logout = () => {
