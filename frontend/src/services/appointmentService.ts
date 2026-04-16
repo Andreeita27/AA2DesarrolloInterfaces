@@ -16,4 +16,32 @@ export const appointmentService = {
             method: 'GET',
             token,
         }),
+
+    // Marcar señal pagada, cambia el estado a confirmed
+    confirmDeposit: (id: number, token: string) =>
+        apiFetch<Appointment>(`/appointments/${id}/confirm-deposit`, {
+            method: 'POST',
+            token,
+        }),
+
+    // Cancelar cita
+    cancel: (id: number, token: string) =>
+        apiFetch<Appointment>(`/appointments/${id}/cancel`, {
+            method: 'POST',
+            token,
+        }),
+
+    // Marcar no asistido
+    markNoShow: (id: number, token:string) =>
+        apiFetch<Appointment>(`/appointments/${id}/mark-no-show`, {
+            method: 'POST',
+            token,
+        }),
+
+    // Obtener detalle de la cita
+    getById: (id: number, token: string) =>
+        apiFetch<Appointment>(`/appointments/${id}`, {
+            method: 'GET',
+            token,
+        }),
 };
