@@ -206,12 +206,6 @@ export default function AdminDashboardPage() {
         <section>
             <h1>Dashboard administrador</h1>
 
-            <p>
-                En esta vista el estado se gestiona con <strong>useReducer</strong>{' '}
-                porque hay varias transiciones relacionadas: carga, error, datos,
-                búsqueda, filtrado y ordenación.
-            </p>
-
             {/* Tarjetas resumen */}
             <div
                 style={{
