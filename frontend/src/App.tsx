@@ -9,6 +9,7 @@ import AdminDashboardPage from './pages/AdminDashboardPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import ProtectedRoute from './routes/ProtectedRoute';
 import RoleRoute from './routes/RoleRoute';
+import AppointmentDetailPage from './pages/AppointmentDetailPage';
 
 // Componente principal de la aplicación
 export default function App() {
@@ -43,6 +44,7 @@ export default function App() {
                   element={<AdminDashboardPage />}
                 />
               </Route>
+              <Route path="/appointments/:id" element={<AppointmentDetailPage />} />
             </Route>
           </Route>
         </Routes>
