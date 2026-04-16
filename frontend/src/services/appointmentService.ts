@@ -38,6 +38,13 @@ export const appointmentService = {
             token,
         }),
 
+    // Marcar completada
+    markCompleted: (id: number, token: string) =>
+        apiFetch<Appointment>(`/appointments/${id}/mark-completed`, {
+            method: 'POST',
+            token,
+        }),
+
     // Obtener detalle de la cita
     getById: (id: number, token: string) =>
         apiFetch<Appointment>(`/appointments/${id}`, {
