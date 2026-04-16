@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useReducer } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { appointmentService } from '../services/appointmentService';
 import type { Appointment } from '../types/appointment';
@@ -125,30 +126,93 @@ function getStateLabel(state: string): string {
     }
 }
 
+// Badge visual para los estados de cita de moemento lo pongo aqui
+function getBadgeStyle(state: string): React.CSSProperties {
+    switch (state) {
+        case 'PENDING':
+            return {
+                backgroundColor: '#6b5500',
+                color: '#fff',
+                padding: '0.3rem 0.6rem',
+                borderRadius: '999px',
+                display: 'inline-block',
+            };
+        case 'CONFIRMED':
+            return {
+                backgroundColor: '#0b4f8a',
+                color: '#fff',
+                padding: '0.3rem 0.6rem',
+                borderRadius: '999px',
+                display: 'inline-block',
+            };
+        case 'COMPLETED':
+            return {
+                backgroundColor: '#1f6b2a',
+                color: '#fff',
+                padding: '0.3rem 0.6rem',
+                borderRadius: '999px',
+                display: 'inline-block',
+            };
+        case 'CANCELLED':
+            return {
+                backgroundColor: '#8a1f1f',
+                color: '#fff',
+                padding: '0.3rem 0.6rem',
+                borderRadius: '999px',
+                display: 'inline-block',
+            };
+        case 'NO_SHOW':
+            return {
+                backgroundColor: '#5a2a2a',
+                color: '#fff',
+                padding: '0.3rem 0.6rem',
+                borderRadius: '999px',
+                display: 'inline-block',
+            };
+        default:
+            return {
+                backgroundColor: '#333',
+                color: '#fff',
+                padding: '0.3rem 0.6rem',
+                borderRadius: '999px',
+                display: 'inline-block',
+            };
+    }
+}
+
 export default function ClientDashboardPage() {
     const { user, token } = useAuth();
 
     // useReducer local porque la vista combina varios estados relacionados
     const [state, dispatch] = useReducer(clientDashboardReducer, initialState);
 
-    // Carga inicial de las citas del cliente autenticado
+    // Estados locales auxiliares para acciones rápidas
+    // No hace falta meterlos en el reducer porque son puntuales y simples
+    const [actionMessage, setActionMessage] = useState('');
+    const [actionError, setActionError] = useState('');
+    const [processingId, setProcessingId] = useState<number | null>(null);
+
+    // Carga de citas del cliente autenticado
+    const loadMyAppointments = async () => {
+        if (!token) return;
+
+        dispatch({ type: 'FETCH_START' });
+
+        try {
+            const data = await appointmentService.getMy(token);
+            dispatch({ type: 'FETCH_SUCCESS', payload: data });
+        } catch (error) {
+            dispatch({
+                type: 'FETCH_ERROR',
+                payload:
+                    error instanceof Error
+                        ? error.message
+                        : 'Error al cargar tus citas',
+            });
+        }
+    };
+
     useEffect(() => {
-        const loadMyAppointments = async () => {
-            if (!token) return;
-
-            dispatch({ type: 'FETCH_START' });
-
-            try {
-                const data = await appointmentService.getMy(token);
-                dispatch({ type: 'FETCH_SUCCESS', payload: data });
-            } catch (error) {
-                dispatch({
-                    type: 'FETCH_ERROR',
-                    payload: error instanceof Error? error.message : 'Error al cargar tus citas',
-                });
-            }
-        };
-
         loadMyAppointments();
     }, [token]);
 
@@ -207,6 +271,49 @@ export default function ClientDashboardPage() {
     const confirmedAppointments = state.appointments.filter((appointment) => appointment.state === 'CONFIRMED').length;
     const completedAppointments = state.appointments.filter((appointment) => appointment.state === 'COMPLETED').length;
 
+    // Acción común para no repetir la misma lógica en cada botón
+    const runRowAction = async (
+        actionFn: () => Promise<Appointment>,
+        successMessage: string
+    ) => {
+        setActionMessage('');
+        setActionError('');
+
+        try {
+            await actionFn();
+            setActionMessage(successMessage);
+
+            // Tras la acción, recargamos desde backend para mantener la tabla sincronizada
+            await loadMyAppointments();
+        } catch (error) {
+            setActionError(
+                error instanceof Error
+                    ? error.message
+                    : 'No se pudo actualizar la cita'
+            );
+        } finally {
+            setProcessingId(null);
+        }
+    };
+
+    // El cliente solo puede cancelar sus propias citas
+    const handleCancel = async (appointment: Appointment) => {
+        if (!token) return;
+
+        const confirmed = window.confirm(
+            '¿Seguro que quieres cancelar esta cita?'
+        );
+
+        if (!confirmed) return;
+
+        setProcessingId(appointment.id);
+
+        await runRowAction(
+            () => appointmentService.cancel(appointment.id, token),
+            'La cita se ha cancelado correctamente.'
+        );
+    };
+
     return (
         <section>
             <h1>Dashboard cliente</h1>
@@ -244,6 +351,15 @@ export default function ClientDashboardPage() {
                     <p>{completedAppointments}</p>
                 </div>
             </div>
+
+            {/* Mensajes de acción */}
+            {actionMessage && (
+                <p style={{ color: '#7CFC98', marginBottom: '1rem' }}>{actionMessage}</p>
+            )}
+
+            {actionError && (
+                <p style={{ color: 'crimson', marginBottom: '1rem' }}>{actionError}</p>
+            )}
 
             {/* Filtros */}
             <div
@@ -344,6 +460,7 @@ export default function ClientDashboardPage() {
                                 </th>
 
                                 <th style={thStyle}>Tipo</th>
+
                                 <th style={thStyle}>
                                     <button
                                         type="button"
@@ -358,7 +475,9 @@ export default function ClientDashboardPage() {
                                         Estado
                                     </button>
                                 </th>
+
                                 <th style={thStyle}>Depósito</th>
+                                <th style={thStyle}>Acciones</th>
                             </tr>
                         </thead>
 
@@ -370,9 +489,44 @@ export default function ClientDashboardPage() {
                                         {formatDate(appointment.startDateTime)}
                                     </td>
                                     <td style={tdStyle}>{appointment.appointmentType}</td>
-                                    <td style={tdStyle}>{getStateLabel(appointment.state)}</td>
+                                    <td style={tdStyle}>
+                                        <span style={getBadgeStyle(appointment.state)}>
+                                            {getStateLabel(appointment.state)}
+                                        </span>
+                                    </td>
                                     <td style={tdStyle}>
                                         {appointment.depositPaid ? 'Sí' : 'No'}
+                                    </td>
+                                    <td style={tdStyle}>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                gap: '0.5rem',
+                                                flexWrap: 'wrap',
+                                            }}
+                                        >
+                                            {/* El cliente también puede ver el detalle */}
+                                            <Link
+                                                to={`/appointments/${appointment.id}`}
+                                                style={linkButtonStyle}
+                                            >
+                                                Ver detalle
+                                            </Link>
+
+                                            {/* El cliente puede cancelar solo si la cita no está ya cerrada */}
+                                            {appointment.state !== 'CANCELLED' &&
+                                                appointment.state !== 'COMPLETED' &&
+                                                appointment.state !== 'NO_SHOW' && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleCancel(appointment)}
+                                                        disabled={processingId === appointment.id}
+                                                        style={miniDangerButtonStyle}
+                                                    >
+                                                        Cancelar
+                                                    </button>
+                                                )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -401,6 +555,7 @@ const thStyle: React.CSSProperties = {
 const tdStyle: React.CSSProperties = {
     borderBottom: '1px solid #333',
     padding: '0.75rem',
+    verticalAlign: 'top',
 };
 
 const sortButtonStyle: React.CSSProperties = {
@@ -410,4 +565,22 @@ const sortButtonStyle: React.CSSProperties = {
     cursor: 'pointer',
     fontWeight: 'bold',
     padding: 0,
+};
+
+const miniDangerButtonStyle: React.CSSProperties = {
+    backgroundColor: '#8a1f1f',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '0.45rem 0.7rem',
+    cursor: 'pointer',
+};
+
+const linkButtonStyle: React.CSSProperties = {
+    backgroundColor: '#333',
+    color: '#fff',
+    borderRadius: '8px',
+    padding: '0.45rem 0.7rem',
+    textDecoration: 'none',
+    display: 'inline-block',
 };
