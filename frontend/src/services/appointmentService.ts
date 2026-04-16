@@ -9,4 +9,11 @@ export const appointmentService = {
             method: 'GET',
             token,
         }),
+
+    // Citas del usuario autenticado
+    getMy: (token:string) =>
+        apiFetch<Appointment[]>('/appointments/my', {
+            method: 'GET',
+            token,
+        }),
 };
