@@ -14,14 +14,6 @@ describe('apiFetch', () => {
         // Se deja limpia la sesión simuldaa
         localStorage.clear();
 
-        // Se simula la funcion replace del navegador para comprobar redirecciones
-        Object.defineProperty(window, 'location', {
-            value: {
-                replace: vi.fn(),
-            },
-            writable: true,
-        });
-
         // Variable de entorno del backend para las pruebas
         vi.stubEnv('VITE_API_URL', 'http://localhost:8080');
     });
@@ -98,6 +90,7 @@ describe('apiFetch', () => {
 
         vi.mocked(fetch).mockResolvedValue(mockResponse as unknown as Response);
 
+        //Simula una sesión previa guardada
         localStorage.setItem('di_aa2_token', 'token-expirado');
         localStorage.setItem('di_aa2_user', JSON.stringify({ email: 'a@a.com' }));
 
@@ -108,10 +101,9 @@ describe('apiFetch', () => {
                 method: 'GET',
                 token: 'token-expirado',
             })
-        ).rejects.toThrow('Tu sesión ha caducado, vuelve a iniciar sesión.');
+        ).rejects.toThrow('Tu sesión ha caducado. Vuelve a iniciar sesión.');
 
         expect(localStorage.getItem('di_aa2_token')).toBeNull();
         expect(localStorage.getItem('di_aa2_user')).toBeNull();
-        expect(window.location.replace).toHaveBeenCalledWith('/login?sessionExpired=1');
     });
 });

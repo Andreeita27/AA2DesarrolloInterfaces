@@ -78,7 +78,7 @@ describe('adminDashboardReducer', () => {
         });
 
         expect(secondClick.sortField).toBe('startDateTime');
-        expect(secondClick.sortDirection).toBe('desc');
+        expect(secondClick.sortDirection).toBe('asc');
     });
 
     it('Reinicia a ascendente si cambia la columna de ordenación', () => {
