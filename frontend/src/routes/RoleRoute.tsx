@@ -24,7 +24,7 @@ export default function RoleRoute ({ allowedRole }: RoleRouteProps) {
 
     // Si el rol no coincide, redirige a una pagina de acceso denegado
     if (user.role !== allowedRole) {
-        return <Navigate to="/unathorized" replace />;
+        return <Navigate to="/unauthorized" replace />;
     }
 
     // Si tiene el rol correcto pasa
