@@ -1,10 +1,18 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 // Layout principal de la aplicación.
 // Contiene cabecera común y el Outlet donde se renderizan las páginas.
 export default function AppLayout() {
   const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  // Al cerrar sesión limpiamos el contexoto y mandamos al usuario a inicio
+  // Así evito que se quede guardada una ruta protegida como destino de vuelta
+  const handleLogout = () => {
+    logout();
+    navigate('/', { replace: true });
+  }
 
   return (
     <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '1rem' }}>
@@ -47,11 +55,11 @@ export default function AppLayout() {
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <span>
                 {/* Muestra email y rol del usuario autenticado */}
-                {user?.email} ({user?.role})
+                {user?.email}
               </span>
 
               {/* Botón para cerrar sesión */}
-              <button onClick={logout}>Cerrar sesión</button>
+              <button onClick={handleLogout}>Cerrar sesión</button>
             </div>
           ) : (
             <span>No autenticado</span>
