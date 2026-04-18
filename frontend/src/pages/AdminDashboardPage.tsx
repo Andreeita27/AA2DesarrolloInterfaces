@@ -318,6 +318,23 @@ export default function AdminDashboardPage() {
         );
     };
 
+    const handleCompleted = async (appointment: Appointment) => {
+        if (!token) return;
+
+        const confirmed = window.confirm(
+            `¿Marcar como completada la cita de ${appointment.clientFullName}?`
+        );
+
+        if (!confirmed) return;
+
+        setProcessingId(appointment.id);
+
+        await runRowAction(
+            () => appointmentService.markCompleted(appointment.id, token),
+            'La cita se ha marcado como completada.'
+        );
+    };
+
     const handleCancel = async (appointment: Appointment) => {
         if (!token) return;
 
@@ -555,6 +572,18 @@ export default function AdminDashboardPage() {
                                                     style={miniButtonStyle}
                                                 >
                                                     Señal pagada
+                                                </button>
+                                            )}
+
+                                            {/* Completar solo tiene sentido si la cita está confirmada*/}
+                                            {appointment.state === 'CONFIRMED' && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleCompleted(appointment)}
+                                                    disabled={processingId === appointment.id}
+                                                    style={miniButtonStyle}
+                                                >
+                                                    Completar
                                                 </button>
                                             )}
 
