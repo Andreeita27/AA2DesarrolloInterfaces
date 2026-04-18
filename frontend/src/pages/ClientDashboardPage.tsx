@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { appointmentService } from '../services/appointmentService';
 import type { Appointment } from '../types/appointment';
-import { clientDashboardInitialState, clientDashboardReducer } from '../features/dashboard/clientDashBoardReducer';
+import { clientDashboardInitialState, clientDashboardReducer } from '../features/dashboard/clientDashboardReducer';
 
 // Formateo de fecha para dejarla mas bonita
 function formatDate(dateString: string): string {
