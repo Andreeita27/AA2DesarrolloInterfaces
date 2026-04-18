@@ -20,6 +20,10 @@ export default function LoginPage() {
     // Si el formulario fue redirigido aqui desde ruta protegida, guarda esa ruta para volver despues del login
     const from = (location.state as { from?: { pathname?: string } })?.from?.pathname;
 
+    //Si el login viene de una redirección por sesión caducada se muestra este mensaje
+    const params = new URLSearchParams(location.search);
+    const sessionExpired = params.get('sessionExpired') === '1';
+
     // Funcion que se ejecuta al enviar el formulario
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event?.preventDefault();
@@ -56,6 +60,12 @@ export default function LoginPage() {
     return (
         <section style={{ maxWidth: '420px' }}>
             <h2>Iniciar sesión</h2>
+
+            {sessionExpired && !errorMessage && (
+                <p style={{ color : 'darkorange', marginBottom: '1rem' }}>
+                    Tu sesión ha caducado, vuelve a iniciar sesión.
+                </p>
+            )}
 
             <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: '1rem' }}>
