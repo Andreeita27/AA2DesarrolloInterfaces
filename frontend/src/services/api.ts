@@ -1,5 +1,5 @@
 // URl base del backend
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL ?? ''; // <- Si la variable no existe, cadena vacia para evitar errores
 
 // Claves de localstorage de la sesión
 const TOKEN_KEY = 'di_aa2_token';
@@ -15,7 +15,7 @@ interface ApiFetchOptions {
     token?: string | null;
 }
 
-// Función reutilizable para hacer peticiones al backend
+// Función reutilizable para hacer peticiones al backend CRITICA -> toda la app depende de ella
 export async function apiFetch<T>( // La T indica el tipo de dato que esperamos recibir
     endpoint: string,
     options: ApiFetchOptions = {}
@@ -54,7 +54,7 @@ export async function apiFetch<T>( // La T indica el tipo de dato que esperamos 
         data = null;
     }
 
-    //Si el backend responde 401 y la peticion llevaba token, la sesion ya no es valida
+    //Si el backend responde 401/403 y la peticion llevaba token, la sesion ya no es valida
     if ((response.status === 401 || response.status === 403) && token) {
         //Limpiamos la sesión guardada
         localStorage.removeItem(TOKEN_KEY);
