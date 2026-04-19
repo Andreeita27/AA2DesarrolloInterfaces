@@ -15,52 +15,17 @@ export default function AppLayout() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background:
-          'radial-gradient(circle at top, rgba(212, 175, 55, 0.08), transparent 25%), #0f0f0f',
-      }}
-    >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1.25rem' }}>
-        <header
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '2rem',
-            gap: '1rem',
-            flexWrap: 'wrap',
-            padding: '1rem 1.25rem',
-            borderRadius: '18px',
-            background: 'rgba(18, 18, 18, 0.92)',
-            border: '1px solid rgba(212, 175, 55, 0.15)',
-            boxShadow: '0 10px 24px rgba(0, 0, 0, 0.28)',
-          }}
-        >
+    <div className="app-shell">
+      <div className="app-container">
+        <header className="app-header">
           {/* Navegación principal */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1.5rem',
-              flexWrap: 'wrap',
-            }}
-          >
+          <div className="app-header-left">
             {/* Logo / nombre del proyecto */}
-            <Link
-              to="/"
-              style={{
-                fontSize: '1.2rem',
-                fontWeight: 800,
-                color: '#f5f5f5',
-                textDecoration: 'none',
-              }}
-            >
+            <Link to="/" className="app-logo">
               62 Rosas Tattoo
             </Link>
 
-            <nav style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <nav className="app-nav">
               <Link to="/">Inicio</Link>
 
               {/* Si no hay sesión, se muestra login y registro */}
@@ -86,37 +51,19 @@ export default function AppLayout() {
           {/* Zona de usuario */}
           <div>
             {isAuthenticated ? (
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '1rem',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                }}
-              >
-                <span style={{ color: '#f0f0f0' }}>
+              <div className="app-user-zone">
+                <span className="app-user-email">
                   {/* Muestra email y rol del usuario autenticado */}
                   {user?.email}
                 </span>
 
                 {/* Botón para cerrar sesión */}
-                <button
-                  onClick={handleLogout}
-                  style={{
-                    backgroundColor: '#f5f5f5',
-                    color: '#111',
-                    border: 'none',
-                    borderRadius: '10px',
-                    padding: '0.7rem 1rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                  }}
-                >
+                <button onClick={handleLogout} className="btn btn-light">
                   Cerrar sesión
                 </button>
               </div>
             ) : (
-              <span style={{ color: '#c9c9c9' }}>Modo público</span>
+              <span className="app-user-public">Modo público</span>
             )}
           </div>
         </header>

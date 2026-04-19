@@ -58,51 +58,50 @@ export default function LoginPage() {
     };
 
     return (
-        <section style={{ maxWidth: '420px' }}>
-            <h2>Iniciar sesión</h2>
+        <section className="auth-section">
+            <div className="auth-card">
+                <p className="eyebrow">Acceso</p>
+                <h2 className="page-title">Iniciar sesión</h2>
 
-            {sessionExpired && !errorMessage && (
-                <p style={{ color : 'darkorange', marginBottom: '1rem' }}>
-                    Tu sesión ha caducado, vuelve a iniciar sesión.
-                </p>
-            )}
-
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        required
-                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="password">Contraseña</label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        required
-                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
-                    />
-                </div>
-
-                {/* Mostramos el mensaje de error si existe */}
-                {errorMessage && (
-                    <p style={{ color: 'crimson', marginBottom: '1rem' }}>
-                        {errorMessage}
+                {sessionExpired && !errorMessage && (
+                    <p className="text-warning">
+                        Tu sesión ha caducado, vuelve a iniciar sesión.
                     </p>
                 )}
 
-                <button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? 'Entrando...' : 'Entrar'}
-                </button>
-            </form>
+                <form onSubmit={handleSubmit} className="form-grid">
+                    <div className="form-field">
+                        <label htmlFor="email" className="form-label">Email</label>
+                        <input
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            required
+                            className="form-input"
+                        />
+                    </div>
+
+                    <div className="form-field">
+                        <label htmlFor="password" className="form-label">Contraseña</label>
+                        <input
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(event) => setPassword(event.target.value)}
+                            required
+                            className="form-input"
+                        />
+                    </div>
+
+                    {/* Mostramos el mensaje de error si existe */}
+                    {errorMessage && <p className="text-danger">{errorMessage}</p>}
+
+                    <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+                        {isSubmitting ? 'Entrando...' : 'Entrar'}
+                    </button>
+                </form>
+            </div>
         </section>
     );
 }

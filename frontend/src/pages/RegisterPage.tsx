@@ -56,110 +56,109 @@ export default function RegisterPage() {
     };
 
     return (
-        <section style={{ maxWidth: '520px' }}>
-            <h2>Registro</h2>
+        <section className="auth-section">
+            <div className="auth-card">
+                <p className="eyebrow">Nueva cuenta</p>
+                <h2 className="page-title">Registro</h2>
 
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="clientName">Nombre</label>
-                    <input
-                        id="clientName"
-                        type="text"
-                        value={formData.clientName}
-                        onChange={(event) => handleChange('clientName', event.target.value)}
-                        required
-                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="clientSurname">Apellidos</label>
-                    <input
-                        id="clientSurname"
-                        type="text"
-                        value={formData.clientSurname}
-                        onChange={(event) =>
-                            handleChange('clientSurname', event.target.value)
-                        }
-                        required
-                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(event) => handleChange('email', event.target.value)}
-                        required
-                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="phone">Teléfono</label>
-                    <input
-                        id="phone"
-                        type="text"
-                        value={formData.phone}
-                        onChange={(event) => handleChange('phone', event.target.value)}
-                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="birthDate">Fecha de nacimiento</label>
-                    <input
-                        id="birthDate"
-                        type="date"
-                        value={formData.birthDate}
-                        onChange={(event) => handleChange('birthDate', event.target.value)}
-                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem' }}>
-                    {/* Checkbox sencillo para showPhoto */}
-                    <label>
+                <form onSubmit={handleSubmit} className="form-grid">
+                    <div className="form-field">
+                        <label htmlFor="clientName" className="form-label">Nombre</label>
                         <input
-                            type="checkbox"
-                            checked={formData.showPhoto}
+                            id="clientName"
+                            type="text"
+                            value={formData.clientName}
+                            onChange={(event) => handleChange('clientName', event.target.value)}
+                            required
+                            className="form-input"
+                        />
+                    </div>
+
+                    <div className="form-field">
+                        <label htmlFor="clientSurname" className="form-label">Apellidos</label>
+                        <input
+                            id="clientSurname"
+                            type="text"
+                            value={formData.clientSurname}
                             onChange={(event) =>
-                                setFormData((previous) => ({
-                                    ...previous,
-                                    showPhoto: event.target.checked,
-                                }))
+                                handleChange('clientSurname', event.target.value)
                             }
-                        />{' '}
-                        Mostrar tus tatuajes en la web
-                    </label>
-                </div>
+                            required
+                            className="form-input"
+                        />
+                    </div>
 
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="password">Contraseña</label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={formData.password}
-                        onChange={(event) => handleChange('password', event.target.value)}
-                        required
-                        style={{ display: 'block', width: '100%', padding: '0.5rem' }}
-                    />
-                </div>
+                    <div className="form-field">
+                        <label htmlFor="email" className="form-label">Email</label>
+                        <input
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={(event) => handleChange('email', event.target.value)}
+                            required
+                            className="form-input"
+                        />
+                    </div>
 
-                {/* Mensaje de error si algo falla */}
-                {errorMessage && (
-                    <p style={{ color: 'crimson', marginBottom: '1rem' }}>
-                        {errorMessage}
-                    </p>
-                )}
+                    <div className="form-field">
+                        <label htmlFor="phone" className="form-label">Teléfono</label>
+                        <input
+                            id="phone"
+                            type="text"
+                            value={formData.phone}
+                            onChange={(event) => handleChange('phone', event.target.value)}
+                            className="form-input"
+                        />
+                    </div>
 
-                <button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? 'Registrando...' : 'Crear cuenta'}
-                </button>
-            </form>
+                    <div className="form-field">
+                        <label htmlFor="birthDate" className="form-label">Fecha de nacimiento</label>
+                        <input
+                            id="birthDate"
+                            type="date"
+                            value={formData.birthDate}
+                            onChange={(event) => handleChange('birthDate', event.target.value)}
+                            className="form-input"
+                        />
+                    </div>
+
+                    <div className="checkbox-row">
+                        {/* Checkbox sencillo para showPhoto */}
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={formData.showPhoto}
+                                onChange={(event) =>
+                                    setFormData((previous) => ({
+                                        ...previous,
+                                        showPhoto: event.target.checked,
+                                    }))
+                                }
+                            />{' '}
+                            Mostrar tus tatuajes en la web
+                        </label>
+                    </div>
+
+                    <div className="form-field">
+                        <label htmlFor="password" className="form-label">Contraseña</label>
+                        <input
+                            id="password"
+                            type="password"
+                            value={formData.password}
+                            onChange={(event) => handleChange('password', event.target.value)}
+                            required
+                            className="form-input"
+                        />
+                    </div>
+
+                    {/* Mensaje de error si algo falla */}
+                    {errorMessage && <p className="text-danger">{errorMessage}</p>}
+
+                    <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+                        {isSubmitting ? 'Registrando...' : 'Crear cuenta'}
+                    </button>
+                </form>
+            </div>
         </section>
     );
 }
