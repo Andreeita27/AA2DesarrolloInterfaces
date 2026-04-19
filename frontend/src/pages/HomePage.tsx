@@ -14,6 +14,10 @@ export default function HomePage() {
         'https://res.cloudinary.com/dcxm3wvdf/image/upload/v1773769871/62rosas/tattoos/dbgliz48gvwe2mh08jjc.jpg',
     ];
 
+    // Dirección real del estudio
+    // La dejo separada para reutilizarla tanto en el texto como en el enlace.
+    const studioAddress = 'Plaza Ortilla, 2, local 4, Zaragoza';
+
     return (
         <section className="home-section">
             {/* HERO PRINCIPAL */}
@@ -93,6 +97,44 @@ export default function HomePage() {
                             </div>
                         </article>
                     ))}
+                </div>
+            </section>
+
+            {/* UBICACIÓN DEL ESTUDIO */}
+            <section className="home-location-section">
+                <div className="home-gallery-header">
+                    <p className="eyebrow">Ubicación</p>
+                    <h2 className="page-title">Dónde estamos</h2>
+                </div>
+
+                <div className="home-location-card">
+                    <div className="home-location-info">
+                        <h3 className="home-location-title">62 Rosas Tattoo</h3>
+
+                        <p className="home-location-text">
+                            Puedes encontrarnos en <strong>{studioAddress}</strong>.
+                        </p>
+
+                        <a
+                            href="https://www.google.com/maps/search/?api=1&query=Plaza+Ortilla,+2,+local+4,+Zaragoza"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-secondary btn-link"
+                            aria-label="Abrir la ubicación del estudio en Google Maps"
+                        >
+                            Abrir en Google Maps
+                        </a>
+                    </div>
+
+                    <div className="home-map-wrapper">
+                        <iframe
+                            title="Mapa de ubicación de 62 Rosas Tattoo"
+                            src="https://www.google.com/maps?q=Plaza+Ortilla,+2,+local+4,+Zaragoza&z=16&output=embed"
+                            className="home-map"
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                        />
+                    </div>
                 </div>
             </section>
         </section>
