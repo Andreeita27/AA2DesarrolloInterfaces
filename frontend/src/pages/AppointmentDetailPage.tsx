@@ -50,21 +50,20 @@ export default function AppointmentDetailPage() {
     };
 
     if (loading) return <p>Cargando detalle...</p>;
-
-    if (error) return <p style={{ color: 'crimson' }}>{error}</p>;
-
+    if (error) return <p className="text-danger">{error}</p>;
     if (!appointment) return <p>No se ha encontrado la cita.</p>;
 
     return (
         <section>
-            <h1>Detalle de la cita</h1>
+            <p className="eyebrow">Cita</p>
+            <h1 className="page-title">Detalle de la cita</h1>
 
-            <button onClick={() => navigate(-1)} style={backButtonStyle}>
+            <button onClick={() => navigate(-1)} className="btn btn-secondary btn-back">
                 ← Volver
             </button>
 
-            <div style={containerStyle}>
-                <div style={cardStyle}>
+            <div className="detail-grid">
+                <div className="card-simple">
                     <h3>Información general</h3>
 
                     <p><strong>Cliente:</strong> {appointment.clientFullName}</p>
@@ -75,7 +74,7 @@ export default function AppointmentDetailPage() {
                     <p><strong>Duración:</strong> {appointment.durationMinutes} minutos</p>
                 </div>
 
-                <div style={cardStyle}>
+                <div className="card-simple">
                     <h3>Detalles del tatuaje</h3>
 
                     <p><strong>Idea:</strong> {appointment.ideaDescription}</p>
@@ -84,7 +83,7 @@ export default function AppointmentDetailPage() {
                     <p><strong>Primera vez:</strong> {appointment.firstTime ? 'Sí' : 'No'}</p>
                 </div>
 
-                <div style={cardStyle}>
+                <div className="card-simple">
                     <h3>Pago</h3>
 
                     <p>
@@ -95,13 +94,13 @@ export default function AppointmentDetailPage() {
 
                 {/* Imagen si existe */}
                 {appointment.referenceImageUrl && (
-                    <div style={cardStyle}>
+                    <div className="card-simple">
                         <h3>Imagen de referencia</h3>
 
                         <img
                             src={appointment.referenceImageUrl}
                             alt="Referencia"
-                            style={{ maxWidth: '100%', borderRadius: '8px' }}
+                            className="detail-image"
                         />
                     </div>
                 )}
@@ -109,24 +108,3 @@ export default function AppointmentDetailPage() {
         </section>
     );
 }
-
-// Estilos simples luego al css
-const containerStyle: React.CSSProperties = {
-    display: 'grid',
-    gap: '1rem',
-    marginTop: '1rem',
-};
-
-const cardStyle: React.CSSProperties = {
-    backgroundColor: '#1b1b1b',
-    border: '1px solid #333',
-    borderRadius: '12px',
-    padding: '1rem',
-};
-
-const backButtonStyle: React.CSSProperties = {
-    marginTop: '1rem',
-    marginBottom: '1rem',
-    padding: '0.5rem 1rem',
-    cursor: 'pointer',
-};

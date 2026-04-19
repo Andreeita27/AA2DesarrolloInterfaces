@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { appointmentService } from '../services/appointmentService';
 import type { Appointment } from '../types/appointment';
-import { clientDashboardInitialState, clientDashboardReducer } from '../features/dashboard/clientDashboardReducer';
+import { clientDashboardInitialState, clientDashboardReducer } from '../features/dashboard/clientDashBoardReducer';
 
 // Formateo de fecha para dejarla mas bonita
 function formatDate(dateString: string): string {
@@ -33,57 +33,21 @@ function getStateLabel(state: string): string {
     }
 }
 
-// Badge visual para los estados de cita de moemento lo pongo aqui
-function getBadgeStyle(state: string): React.CSSProperties {
+// Badge visual para los estados de cita
+function getBadgeClass(state: string): string {
     switch (state) {
         case 'PENDING':
-            return {
-                backgroundColor: '#6b5500',
-                color: '#fff',
-                padding: '0.3rem 0.6rem',
-                borderRadius: '999px',
-                display: 'inline-block',
-            };
+            return 'status-badge status-pending';
         case 'CONFIRMED':
-            return {
-                backgroundColor: '#0b4f8a',
-                color: '#fff',
-                padding: '0.3rem 0.6rem',
-                borderRadius: '999px',
-                display: 'inline-block',
-            };
+            return 'status-badge status-confirmed';
         case 'COMPLETED':
-            return {
-                backgroundColor: '#1f6b2a',
-                color: '#fff',
-                padding: '0.3rem 0.6rem',
-                borderRadius: '999px',
-                display: 'inline-block',
-            };
+            return 'status-badge status-completed';
         case 'CANCELLED':
-            return {
-                backgroundColor: '#8a1f1f',
-                color: '#fff',
-                padding: '0.3rem 0.6rem',
-                borderRadius: '999px',
-                display: 'inline-block',
-            };
+            return 'status-badge status-cancelled';
         case 'NO_SHOW':
-            return {
-                backgroundColor: '#5a2a2a',
-                color: '#fff',
-                padding: '0.3rem 0.6rem',
-                borderRadius: '999px',
-                display: 'inline-block',
-            };
+            return 'status-badge status-no-show';
         default:
-            return {
-                backgroundColor: '#333',
-                color: '#fff',
-                padding: '0.3rem 0.6rem',
-                borderRadius: '999px',
-                display: 'inline-block',
-            };
+            return 'status-badge status-default';
     }
 }
 
@@ -222,63 +186,44 @@ export default function ClientDashboardPage() {
     };
 
     return (
-        <section>
-            <h1>Dashboard cliente</h1>
+        <section className="dashboard-section">
+            <h1 className="page-title">Dashboard cliente</h1>
 
-            <p>
-                Bienvenida, <strong>{user?.email}</strong>
+            <p className="page-subtitle">
+                Bienvenido, <strong>{user?.email}</strong>
             </p>
 
             {/* Tarjetas resumen */}
-            <div
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                    gap: '1rem',
-                    marginBottom: '1.5rem',
-                }}
-            >
-                <div style={cardStyle}>
+            <div className="summary-grid">
+                <div className="summary-card">
                     <h3>Total</h3>
                     <p>{totalAppointments}</p>
                 </div>
 
-                <div style={cardStyle}>
+                <div className="summary-card">
                     <h3>Pendientes</h3>
                     <p>{pendingAppointments}</p>
                 </div>
 
-                <div style={cardStyle}>
+                <div className="summary-card">
                     <h3>Confirmadas</h3>
                     <p>{confirmedAppointments}</p>
                 </div>
 
-                <div style={cardStyle}>
+                <div className="summary-card">
                     <h3>Completadas</h3>
                     <p>{completedAppointments}</p>
                 </div>
             </div>
 
             {/* Mensajes de acción */}
-            {actionMessage && (
-                <p style={{ color: '#7CFC98', marginBottom: '1rem' }}>{actionMessage}</p>
-            )}
-
-            {actionError && (
-                <p style={{ color: 'crimson', marginBottom: '1rem' }}>{actionError}</p>
-            )}
+            {actionMessage && <p className="text-success">{actionMessage}</p>}
+            {actionError && <p className="text-danger">{actionError}</p>}
 
             {/* Filtros */}
-            <div
-                style={{
-                    display: 'flex',
-                    gap: '1rem',
-                    flexWrap: 'wrap',
-                    marginBottom: '1rem',
-                }}
-            >
-                <div>
-                    <label htmlFor="search">Buscar</label>
+            <div className="dashboard-filters">
+                <div className="form-field search-field">
+                    <label htmlFor="search" className="form-label">Buscar</label>
                     <input
                         id="search"
                         type="text"
@@ -287,12 +232,12 @@ export default function ClientDashboardPage() {
                             dispatch({ type: 'SET_SEARCH', payload: event.target.value })
                         }
                         placeholder="Profesional o idea"
-                        style={{ display: 'block', padding: '0.5rem', minWidth: '220px' }}
+                        className="form-input"
                     />
                 </div>
 
-                <div>
-                    <label htmlFor="stateFilter">Filtrar por estado</label>
+                <div className="form-field">
+                    <label htmlFor="stateFilter" className="form-label">Filtrar por estado</label>
                     <select
                         id="stateFilter"
                         value={state.stateFilter}
@@ -302,7 +247,7 @@ export default function ClientDashboardPage() {
                                 payload: event.target.value,
                             })
                         }
-                        style={{ display: 'block', padding: '0.5rem', minWidth: '180px' }}
+                        className="form-select"
                     >
                         <option value="">Todos</option>
                         <option value="PENDING">Pendiente</option>
@@ -316,8 +261,7 @@ export default function ClientDashboardPage() {
 
             {/* Estados de carga y error */}
             {state.loading && <p>Cargando tus citas...</p>}
-
-            {state.error && <p style={{ color: 'crimson' }}>{state.error}</p>}
+            {state.error && <p className="text-danger">{state.error}</p>}
 
             {/* Estado vacío */}
             {!state.loading && !state.error && visibleAppointments.length === 0 && (
@@ -326,17 +270,11 @@ export default function ClientDashboardPage() {
 
             {/* Tabla */}
             {!state.loading && !state.error && visibleAppointments.length > 0 && (
-                <div style={{ overflowX: 'auto' }}>
-                    <table
-                        style={{
-                            width: '100%',
-                            borderCollapse: 'collapse',
-                            marginTop: '1rem',
-                        }}
-                    >
+                <div className="table-wrapper">
+                    <table className="data-table">
                         <thead>
                             <tr>
-                                <th style={thStyle}>
+                                <th>
                                     <button
                                         type="button"
                                         onClick={() =>
@@ -345,13 +283,13 @@ export default function ClientDashboardPage() {
                                                 payload: 'professionalName',
                                             })
                                         }
-                                        style={sortButtonStyle}
+                                        className="sort-button"
                                     >
                                         Profesional
                                     </button>
                                 </th>
 
-                                <th style={thStyle}>
+                                <th>
                                     <button
                                         type="button"
                                         onClick={() =>
@@ -360,15 +298,15 @@ export default function ClientDashboardPage() {
                                                 payload: 'startDateTime',
                                             })
                                         }
-                                        style={sortButtonStyle}
+                                        className="sort-button"
                                     >
                                         Fecha
                                     </button>
                                 </th>
 
-                                <th style={thStyle}>Tipo</th>
+                                <th>Tipo</th>
 
-                                <th style={thStyle}>
+                                <th>
                                     <button
                                         type="button"
                                         onClick={() =>
@@ -377,45 +315,35 @@ export default function ClientDashboardPage() {
                                                 payload: 'state',
                                             })
                                         }
-                                        style={sortButtonStyle}
+                                        className="sort-button"
                                     >
                                         Estado
                                     </button>
                                 </th>
 
-                                <th style={thStyle}>Depósito</th>
-                                <th style={thStyle}>Acciones</th>
+                                <th>Depósito</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             {visibleAppointments.map((appointment) => (
                                 <tr key={appointment.id}>
-                                    <td style={tdStyle}>{appointment.professionalName}</td>
-                                    <td style={tdStyle}>
-                                        {formatDate(appointment.startDateTime)}
-                                    </td>
-                                    <td style={tdStyle}>{appointment.appointmentType}</td>
-                                    <td style={tdStyle}>
-                                        <span style={getBadgeStyle(appointment.state)}>
+                                    <td>{appointment.professionalName}</td>
+                                    <td>{formatDate(appointment.startDateTime)}</td>
+                                    <td>{appointment.appointmentType}</td>
+                                    <td>
+                                        <span className={getBadgeClass(appointment.state)}>
                                             {getStateLabel(appointment.state)}
                                         </span>
                                     </td>
-                                    <td style={tdStyle}>
-                                        {appointment.depositPaid ? 'Sí' : 'No'}
-                                    </td>
-                                    <td style={tdStyle}>
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                gap: '0.5rem',
-                                                flexWrap: 'wrap',
-                                            }}
-                                        >
+                                    <td>{appointment.depositPaid ? 'Sí' : 'No'}</td>
+                                    <td>
+                                        <div className="row-actions">
                                             {/* El cliente también puede ver el detalle */}
                                             <Link
                                                 to={`/appointments/${appointment.id}`}
-                                                style={linkButtonStyle}
+                                                className="btn btn-dark btn-mini btn-link"
                                             >
                                                 Ver detalle
                                             </Link>
@@ -428,7 +356,7 @@ export default function ClientDashboardPage() {
                                                         type="button"
                                                         onClick={() => handleCancel(appointment)}
                                                         disabled={processingId === appointment.id}
-                                                        style={miniDangerButtonStyle}
+                                                        className="btn btn-danger btn-mini"
                                                     >
                                                         Cancelar
                                                     </button>
@@ -444,50 +372,3 @@ export default function ClientDashboardPage() {
         </section>
     );
 }
-
-// Estilos sencillos inline luego hago el css
-const cardStyle: React.CSSProperties = {
-    backgroundColor: '#1b1b1b',
-    border: '1px solid #333',
-    borderRadius: '12px',
-    padding: '1rem',
-};
-
-const thStyle: React.CSSProperties = {
-    textAlign: 'left',
-    borderBottom: '1px solid #444',
-    padding: '0.75rem',
-};
-
-const tdStyle: React.CSSProperties = {
-    borderBottom: '1px solid #333',
-    padding: '0.75rem',
-    verticalAlign: 'top',
-};
-
-const sortButtonStyle: React.CSSProperties = {
-    background: 'none',
-    border: 'none',
-    color: '#f5f5f5',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-    padding: 0,
-};
-
-const miniDangerButtonStyle: React.CSSProperties = {
-    backgroundColor: '#8a1f1f',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '8px',
-    padding: '0.45rem 0.7rem',
-    cursor: 'pointer',
-};
-
-const linkButtonStyle: React.CSSProperties = {
-    backgroundColor: '#333',
-    color: '#fff',
-    borderRadius: '8px',
-    padding: '0.45rem 0.7rem',
-    textDecoration: 'none',
-    display: 'inline-block',
-};
