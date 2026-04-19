@@ -1,5 +1,6 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import Footer from './Footer';
 
 // Layout principal de la aplicación.
 // Contiene cabecera común y el Outlet donde se renderizan las páginas.
@@ -72,6 +73,9 @@ export default function AppLayout() {
         <main>
           <Outlet />
         </main>
+
+        {/* Footer reutilizable de toda la aplicación */}
+        <Footer />
       </div>
     </div>
   );
