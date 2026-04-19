@@ -51,7 +51,7 @@ export default function AppLayout() {
 
           {/* Zona de usuario */}
           <div>
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <div className="app-user-zone">
                 <span className="app-user-email">
                   {/* Muestra email y rol del usuario autenticado */}
@@ -63,8 +63,6 @@ export default function AppLayout() {
                   Cerrar sesión
                 </button>
               </div>
-            ) : (
-              <span className="app-user-public">Modo público</span>
             )}
           </div>
         </header>
