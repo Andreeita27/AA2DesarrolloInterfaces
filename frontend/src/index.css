@@ -112,7 +112,14 @@ button {
 .app-logo {
   font-size: 1.2rem;
   font-weight: 800;
-  color: var(--text);
+  color: var(--gold);
+  text-decoration: none;
+  letter-spacing: 0.5px;
+}
+
+/* Hover más elegante */
+.app-logo:hover {
+  opacity: 0.9;
 }
 
 .app-nav {
@@ -166,6 +173,12 @@ button {
 .btn-primary {
   background: var(--gold);
   color: #111;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.35);
 }
 
 .btn-secondary {
@@ -614,6 +627,35 @@ button {
   margin: 0;
   color: var(--text-muted);
   font-size: 0.95rem;
+}
+
+/* =========================
+   HEADER ACCIONES (DERECHA)
+   ========================= */
+.app-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Opcional: mejora visual de los botones del header */
+.app-actions .btn {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* Ajuste para que no sean demasiado grandes en header */
+.app-actions .btn-primary {
+  background: var(--gold);
+  color: #111;
+}
+
+.app-actions .btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--text);
 }
 
 @media (max-width: 768px) {

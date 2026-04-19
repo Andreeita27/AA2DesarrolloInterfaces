@@ -19,47 +19,46 @@ export default function AppLayout() {
     <div className="app-shell">
       <div className="app-container">
         <header className="app-header">
-          {/* Navegación principal */}
+          {/* IZQUIERDA: logo + navegación */}
           <div className="app-header-left">
-            {/* Logo / nombre del proyecto */}
+            {/* Logo */}
             <Link to="/" className="app-logo">
               62 Rosas Tattoo
             </Link>
 
+            {/* Navegación principal */}
             <nav className="app-nav">
               <Link to="/">Inicio</Link>
 
-              {/* Si no hay sesión, se muestra login y registro */}
-              {!isAuthenticated && (
-                <>
-                  <Link to="/login">Login</Link>
-                  <Link to="/register">Registro</Link>
-                </>
-              )}
-
-              {/* Si es cliente, enseña su dashboard */}
+              {/* Si es cliente */}
               {isAuthenticated && user?.role === 'CLIENT' && (
                 <Link to="/client/dashboard">Dashboard cliente</Link>
               )}
 
-              {/* Si es admin, enseña su dashboard */}
+              {/* Si es admin */}
               {isAuthenticated && user?.role === 'ADMIN' && (
                 <Link to="/admin/dashboard">Dashboard admin</Link>
               )}
             </nav>
           </div>
 
-          {/* Zona de usuario */}
-          <div>
-            {isAuthenticated && (
-              <div className="app-user-zone">
-                <span className="app-user-email">
-                  {/* Muestra email y rol del usuario autenticado */}
-                  {user?.email}
-                </span>
+          {/* DERECHA: acciones */}
+          <div className="app-actions">
+            {!isAuthenticated ? (
+              <>
+                <Link to="/login" className="btn btn-secondary btn-link">
+                  Iniciar sesión
+                </Link>
 
-                {/* Botón para cerrar sesión */}
-                <button onClick={handleLogout} className="btn btn-light">
+                <Link to="/register" className="btn btn-primary btn-link">
+                  Crear cuenta
+                </Link>
+              </>
+            ) : (
+              <div className="app-user-zone">
+                <span className="app-user-email">{user?.email}</span>
+
+                <button onClick={handleLogout} className="btn btn-primary">
                   Cerrar sesión
                 </button>
               </div>
