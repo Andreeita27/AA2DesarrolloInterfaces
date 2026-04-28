@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { clientDashboardInitialState, clientDashboardReducer, } from './clientDashboardReducer';
+import { clientDashboardInitialState, clientDashboardReducer, } from './clientDashBoardReducer';
 import type { Appointment } from '../../types/appointment';
 
 // Mock de cita para el dashboard del cliente
