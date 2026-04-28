@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb:11
+    container_name: rosas-db-di
+    restart: always
+    environment:
+      MARIADB_DATABASE: rosas-tattoo-di
+      MARIADB_USER: user
+      MARIADB_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3312:3306"
+
+  backend:
+    build: ./backend
+    container_name: rosas-backend-di
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:mariadb://db:3306/rosas-tattoo-di
+      DB_USER: user
+      DB_PASSWORD: password
+
+      ADMIN_EMAIL: estudio@62rosastattoo.com
+      ADMIN_PASSWORD: 62RosasTattoo
+
+      JWT_SECRET: Yh73kLm9xQp4zR8tV2nB6wXc5AsD9fGhJkL0pQrS
+
+      CLOUDINARY_CLOUD_NAME: dcxm3wvdf
+      CLOUDINARY_API_KEY: 914214927844966
+      CLOUDINARY_API_SECRET: AjmfcBcJ3Yb_UE3_rWlzSxPMs5g
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:8080
+    container_name: rosas-frontend-di
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  mariadb_data:
