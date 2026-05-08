@@ -41,7 +41,7 @@ services:
     build:
       context: ./frontend
       args:
-        VITE_API_URL: http://ec2-54-86-126-66.compute-1.amazonaws.com
+        VITE_API_URL: http://54.82.198.100:8080
     container_name: rosas-frontend-di
     restart: always
     depends_on:
